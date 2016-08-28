@@ -1,0 +1,155 @@
+@import "../../bower_components/normalize-css/normalize.css";
+
+$path: '../img';
+$body-bgr: #cccccc;
+$weight-factory-bgr: #2B81AF;
+$weigher-bgr:#bab8b8;
+$weigher-color:#FFF;
+$weigher-scalepan-bgr:#9b9696;
+$weigher-container-width:500px;
+$weigher-height:100px;
+html, body {
+  height: 100%;
+  min-height: 360px;
+  min-width: 500px;
+}
+
+.container {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+  background: $body-bgr;
+}
+
+.weigher,.weight-factory-container, .weight-factory, .weigher-container, .weigher-scalepan {
+  box-sizing: border-box;
+}
+// груз
+.weight {
+  display: inline-block;
+  width: 31px;
+  height: 41px;
+  line-height: 20px;
+  margin-top: -2px;
+  position: fixed;
+  z-index: 1;
+  transition: background-image 0.3s linear;
+  background-repeat: no-repeat;
+  background-size: 55px;
+  background-position: -9px -5px;
+  background-image: url("#{$path}/bomb_default.png");
+  &[data-state="happy"] {
+    width: 43px;
+    background-image: url("#{$path}/bomb_happy.png");
+    background-position: -7px -5px;
+  }
+  &[data-state="question"] {
+    width: 37px;
+    background-image: url("#{$path}/bomb_question.png");
+    background-position: -6px -3px;
+  }
+  &[data-state="angry"] {
+    width: 45px;
+    background-image: url("#{$path}/bomb_angry.png");
+  }
+  &[data-state="lost"] {
+    width: 45px;
+    background-image: url("#{$path}/bomb_lost.png");
+
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  &.drag {
+    cursor: move;
+    position: fixed;
+  }
+}
+// контейнер пушки
+.weight-factory-container {
+  width: 100%;
+  height: 50px;
+  padding: 0 8px;
+  border-bottom: 1px solid darken($weight-factory-bgr, 15);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: $weight-factory-bgr;
+  // пушка
+  .weight-factory {
+    width: 128px;
+    height: 128px;
+    margin-top: -45px;
+    position: absolute;
+    z-index: 2;
+    transform: rotate(44deg);
+    transition: margin 0.3s ease-in-out;
+    background: url("#{$path}/gun.png") no-repeat center;
+    background-size: cover;
+    &.reload {
+      margin-top: -70px;
+    }
+  }
+}
+// весы
+.weigher-container {
+  position: absolute;
+  width: $weigher-container-width;
+  height: 200px;
+  padding-bottom: 100px;
+  margin-left: -$weigher-container-width/2;
+  left: 50%;
+  bottom: 0;
+  // чаши
+  .weigher-scalepan {
+    width: 140px;
+    height: 20px;
+    margin-top: $weigher-height/2;
+    border-bottom: 20px solid $weigher-scalepan-bgr;
+    border-radius: 2px 2px 8px 8px;
+    position: relative;
+    top: 0;
+    &.scalepan-left {
+      float: left;
+    }
+    &.scalepan-right {
+      float: left;
+    }
+    .weight {
+      position: absolute;
+      margin-top: 12px;
+    }
+  }
+  // центр весов
+  .weigher {
+    float: left;
+    width: 180px;
+    height: $weigher-height;
+    margin: 0 20px;
+    text-align: center;
+    transition: border-radius 0.5s ease-in-out;
+    background: $weigher-bgr;
+    &[data-pos="left"] {
+      border-radius: 37% 0;
+    }
+    &[data-pos='right'] {
+      border-radius: 0 37%;
+    }
+    &:after {
+      content: attr(data-size);
+      display: inline-block;
+      color: $weigher-color;
+      font-size: 48px;
+      line-height: 100px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+  }
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}

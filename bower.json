@@ -1,0 +1,21 @@
+{
+  "name": "weigher",
+  "description": "Test task for the development of weighers",
+  "main": "gulpfile.js",
+  "authors": [
+    "Dmitiy Mikhaylov"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jQuery": "^3.1.0",
+    "normalize-css": "normalize.css#^4.2.0"
+  }
+}
