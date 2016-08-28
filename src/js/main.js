@@ -23,7 +23,7 @@ var factory = (function ($) {
             factory.weight_factory = new weight_factory; // объект управления пушкой
             factory.weigher = new weigher; // объект весов
             $(window).on('resize',function(){
-                clearInterval(resizeTimer)
+                clearInterval(resizeTimer);
                 resizeTimer = setTimeout(function(){
                     weightList.forEach(function(weight){
                         if(!weight.$scalepan){
@@ -47,9 +47,9 @@ var factory = (function ($) {
                 // mouseup глобален так, как при перемещении груза можно навести на другой элемент и событие не сработает
                 $(document).on('mouseup', function (e) {
                     if (weightDrag) {
-                        weightDrag.state = 'default'
-                        weightDrag.drag = false // запускает анимацию падения
-                        weightDrag = null
+                        weightDrag.state = 'default';
+                        weightDrag.drag = false; // запускает анимацию падения
+                        weightDrag = null;
                     }
                 })
             }
@@ -74,15 +74,15 @@ var factory = (function ($) {
             this.$el.get(0).addEventListener('touchend', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-            })
+            });
             document.addEventListener('touchend', function (e) {
                 if (self.reload === false) {
-                    factory.weight(sizes[Math.floor(Math.random() * sizes.length)])
-                    self.reload = true
+                    factory.weight(sizes[Math.floor(Math.random() * sizes.length)]);
+                    self.reload = true;
                 }
                 e.preventDefault();
                 e.stopPropagation();
-            }, false)
+            }, false);
         }
         else {
             // определяем события перемещения пушки
@@ -91,16 +91,16 @@ var factory = (function ($) {
                 self.$el.css({
                     left: e.clientX - self.$el.width() / 2
                 })
-            })
+            });
             // груз может создаваться по нажатию пробела и лкм
             var createWaiger = function (e) {
                 factory.weight(sizes[Math.floor(Math.random() * sizes.length)]);
                 self.reload = true;
-            }
+            };
 
             $(document).on('mousedown', function () {
                 move = 0;
-            })
+            });
 
             $(document).on('mouseup', function (e) {
                 if (self.reload === false && move == 0 && e.originalEvent.button == 0 && weightDrag == null) {
@@ -109,14 +109,14 @@ var factory = (function ($) {
                 else {
                     move = 0;
                 }
-            })
+            });
 
             $(document).on('keyup', function (e) {
                 if (e.keyCode === 32 && self.reload === false) {
                     createWaiger();
                     e.preventDefault();
                 }
-            })
+            });
         }
     }
 
@@ -124,37 +124,37 @@ var factory = (function ($) {
     // Необходимо из-за специфики расчета анимации падения грузка
     Object.defineProperty(weight_factory.prototype, 'reload', {
         get: function () {
-            return this.$el.hasClass('reload')
+            return this.$el.hasClass('reload');
         },
         set: function (value) {
-            this.$el.toggleClass('reload', !!value)
+            this.$el.toggleClass('reload', !!value);
         }
     })
     // ================ /Пушка ================
 
     // ================ Груз ================
     function weight(size) {
-        var self = this
-        this.weight = size
-        this.$el = $('<div class="weight"></div>')
-        this.state = 'default'
+        var self = this;
+        this.weight = size;
+        this.$el = $('<div class="weight"></div>');
+        this.state = 'default';
         if (isMobile) {
             // работа с перемещением грузка юзером
             // weightDrag используется для сохранения аналогии при работе с курсором, а по факту достаточно self
             this.$el.get(0).addEventListener('touchstart', function (e) {
                 if (e.targetTouches.length == 1) {
-                    self.drag = true
-                    weightDrag = self
+                    self.drag = true;
+                    weightDrag = self;
                     if (self.$scalepan) {
-                        self.$scalepan.trigger('collision.pop', [self])
+                        self.$scalepan.trigger('collision.pop', [self]);
                     }
                 }
                 e.preventDefault();
                 e.stopPropagation();
-            }, false)
+            }, false);
             this.$el.get(0).addEventListener('touchmove', function (e) {
                 if (weightDrag) {
-                    weightDrag.state = 'question'
+                    weightDrag.state = 'question';
                     weightDrag.$el.css({
                         left: e.touches[0].clientX,
                         top: e.touches[0].clientY
@@ -165,35 +165,35 @@ var factory = (function ($) {
             }, false);
             this.$el.get(0).addEventListener('touchend', function (e) {
                 if (weightDrag) {
-                    weightDrag.state = 'default'
-                    weightDrag.drag = false // запускает анимацию падения
-                    weightDrag = null
+                    weightDrag.state = 'default';
+                    weightDrag.drag = false; // запускает анимацию падения
+                    weightDrag = null;
                     e.preventDefault();
                     e.stopPropagation();
                 }
-            }, false)
+            }, false);
         }
         else {
             // работа с перемещением грузка юзером
             this.$el.on('mousedown', function (e) {
                 if(e.originalEvent.button == 0){
-                    self.drag = true
-                    weightDrag = self
+                    self.drag = true;
+                    weightDrag = self;
                     if (self.$scalepan) {
-                        self.$scalepan.trigger('collision.pop', [self])
+                        self.$scalepan.trigger('collision.pop', [self]);
                     }
                 }
-            })
+            });
         }
         // устанавливаем позицию груза относительно пушки
         this.$el.css({
             left: factory.weight_factory.$el.offset().left - 15 + factory.weight_factory.$el.width() / 2
-        })
+        });
         // добавляем объект на сцену, кроме этого может находиться внутри чаш весов (weigher_scalepan)
-        this.$el.appendTo($('#weigher_main'))
-        weightList.push(this)
+        this.$el.appendTo($('#weigher_main'));
+        weightList.push(this);
         // расчет падения груза
-        this.calc_physics()
+        this.calc_physics();
     }
 
     Object.defineProperties(weight.prototype, {
@@ -205,10 +205,10 @@ var factory = (function ($) {
         // lost - в любом другом месте, после падения
         state: {
             get: function () {
-                return this.$el.attr('data-state')
+                return this.$el.attr('data-state');
             },
             set: function (value) {
-                this.$el.attr('data-state', value)
+                this.$el.attr('data-state', value);
             }
         },
         // определяем объект столкновения с грузом если не чаши весов то #weigher_main
@@ -220,16 +220,16 @@ var factory = (function ($) {
                     collision = [];
                 $('#weigher_scalepan_left, #weigher_scalepan_right').each(function (i, item) {
                     var item_offset = $(this).offset(),
-                        item_width = $(this).width()
+                        item_width = $(this).width();
 
                     if (offset.top <= item_offset.top &&
                         (offset.left + offset_width / 2 >= item_offset.left && offset.left <= item_offset.left + item_width) &&
                         (collision_offset_top < item_offset.top || typeof collision == 'undefined')) {
                         //if body
-                        collision = $(item)
+                        collision = $(item);
                     }
-                })
-                return collision
+                });
+                return collision;
             }
         },
         // расчет падения груза
@@ -242,46 +242,46 @@ var factory = (function ($) {
                     collision = this.get_collision;
 
                 if (collision.length) {
-                    top = collision.offset().top + collision.height() - this.$el.height()
+                    top = collision.offset().top + collision.height() - this.$el.height();
                     /* если collision - чаша весов, то после окончания анимации добавляем груз
                        к объекту weigher.scalepan_( left|right )_ar */
 
                     fx = function () {
-                        collision.trigger('collision.push', [self])
+                        collision.trigger('collision.push', [self]);
                         // reload пушки в этом случае определяется анимацией весов
                     }
                 }
                 else {
-                    top = $('#weigher_main').height() - this.$el.height()
+                    top = $('#weigher_main').height() - this.$el.height();
                     // если collision не определен то бросаем в #weigher_main и меняем картинку груза
                     fx = function () {
-                        self.state = 'angry'
+                        self.state = 'angry';
                         // анимации #weigher_main нет, сразу перезаряжаем пушку
-                        factory.weight_factory.reload = false
-                    }
+                        factory.weight_factory.reload = false;
+                    };
                 }
                 // останавливаем анимацию весов
-                factory.weigher.$scalepan_left.stop()
-                factory.weigher.$scalepan_right.stop()
+                factory.weigher.$scalepan_left.stop();
+                factory.weigher.$scalepan_right.stop();
                 /* падение пушки с учетом ускорения, необходимо чтобы, на весы и #weigher_main
                    груз падал с одинаковой скоростью */
                 this.$el.animate({top: top}, {
                     duration: Math.sqrt((top - offset.top) / acceleration),
                     easing: "physics",
                     complete: fx
-                })
+                });
             }
         },
         // определяем .class при перемещения грузка юзером, запускает анимацию падения
         drag: {
             set: function (value) {
-                this.$el.toggleClass('drag', !!value)
+                this.$el.toggleClass('drag', !!value);
                 if (!!value == false) {
-                    this.calc_physics()
+                    this.calc_physics();
                 }
             },
             get: function () {
-                return this.$el.hasClass('drag')
+                return this.$el.hasClass('drag');
             }
         }
     })
@@ -289,71 +289,71 @@ var factory = (function ($) {
 
     // ================ Весы ================
     function weigher() {
-        var self = this
-        this.scalepan_left_ar = [] // грузы левой чаши
-        this.scalepan_right_ar = [] // грузы правой чаши
-        this.$el = $('#weigher')
-        this.$scalepan_left = $('#weigher_scalepan_left')
-        this.$scalepan_right = $('#weigher_scalepan_right')
+        var self = this;
+        this.scalepan_left_ar = []; // грузы левой чаши
+        this.scalepan_right_ar = []; // грузы правой чаши
+        this.$el = $('#weigher');
+        this.$scalepan_left = $('#weigher_scalepan_left');
+        this.$scalepan_right = $('#weigher_scalepan_right');
         // расчет конечного веса на обеих чашах
         this.set_scalepan_size = function () {
             var left_size = 0, // вес левой чаши
-                right_size = 0 // вес правой чаши
+                right_size = 0; // вес правой чаши
 
             function reduct_size(a, b) {
-                return a + b.weight
+                return a + b.weight;
             }
 
             if (self.scalepan_right_ar.length)
-                right_size = self.scalepan_right_ar.reduce(reduct_size, 0)
+                right_size = self.scalepan_right_ar.reduce(reduct_size, 0);
             if (self.scalepan_left_ar.length)
-                left_size = self.scalepan_left_ar.reduce(reduct_size, 0)
+                left_size = self.scalepan_left_ar.reduce(reduct_size, 0);
             /* scalepan_size привязан #weigher[data-size]
                нужно чтобы показывать вес через css:content */
-            this.scalepan_size = right_size - left_size
-        }
+            this.scalepan_size = right_size - left_size;
+        };
         // Вешаем обработчики на добавление и удаление груза из чаш
         $.each(['scalepan_left', 'scalepan_right'], function (key, prop) {
             self['$' + prop].on('collision.push', function (e, weight) {
-                self[prop + '_ar'].push(weight)
-                weight.$scalepan = $(this)
-                self.set_scalepan_size()
+                self[prop + '_ar'].push(weight);
+                weight.$scalepan = $(this);
+                self.set_scalepan_size();
                 weight.$el.css({
                     top: weight.$el.offset().top - weight.$scalepan.offset().top,
                     left: weight.$el.offset().left - weight.$scalepan.offset().left
                 })
-                weight.$el.appendTo(weight.$scalepan)
-            })
+                weight.$el.appendTo(weight.$scalepan);
+            });
             self['$' + prop].on('collision.pop', function (e, weight) {
-                var index = self[prop + '_ar'].indexOf(weight)
+                var index = self[prop + '_ar'].indexOf(weight);
                 if (index != -1) {
-                    weight.$scalepan = null
-                    self[prop + '_ar'].splice(index, 1)
-                    self.set_scalepan_size()
-                    weight.$el.appendTo($('#weigher_main'))
+                    weight.$scalepan = null;
+                    self[prop + '_ar'].splice(index, 1);
+                    self.set_scalepan_size();
+                    weight.$el.appendTo($('#weigher_main'));
                     weight.$el.css({
                         top: weight.$el.offset().top,
                         left: weight.$el.offset().left
                     })
                 }
-            })
-        })
+            });
+        });
     }
 
     Object.defineProperties(weigher.prototype, {
         // pos определяет в сss с какой стороны весов груз тяжелее
         pos: {
             get: function () {
-                return this.$el.attr('data-pos')
+                return this.$el.attr('data-pos');
             },
             set: function (value) {
-                this.$el.attr('data-pos', value)
+                this.$el.attr('data-pos', value);
             }
         },
         // расче веса и анимация весов
         scalepan_size: {
             get: function () {
-                return parseInt(this.$el.attr('data-size'))
+                return parseInt(this.$el.attr('data-size'));
             },
             set: function (value) {
                 var self = this,
@@ -362,57 +362,57 @@ var factory = (function ($) {
                     weight_coff,// кофф. веса к смешению чаш
                     coff; // смешение чаши по весу
 
-                weight_coff = max_height / max_weight
-                coff = weight_coff * value
+                weight_coff = max_height / max_weight;
+                coff = weight_coff * value;
                 if (value < 0) {
                     // устанавливаем состояние всех грузов на чашах
                     this.scalepan_left_ar.forEach(function (weight) {
-                        weight.state = 'happy'
-                    })
+                        weight.state = 'happy';
+                    });
                     this.scalepan_right_ar.forEach(function (weight) {
-                        weight.state = 'lost'
-                    })
+                        weight.state = 'lost';
+                    });
                     if (this.scalepan_right_ar.length == 0) {
-                        coff = -weight_coff * max_weight
-                    }
+                        coff = -weight_coff * max_weight;
+                    };
                 }
                 // если вес на чашах одинаковый
                 else if (value == 0) {
                     // устанавливаем состояние всех грузов на чашах
                     this.scalepan_left_ar.forEach(function (weight) {
-                        weight.state = 'default'
-                    })
+                        weight.state = 'default';
+                    });
                     this.scalepan_right_ar.forEach(function (weight) {
-                        weight.state = 'default'
-                    })
+                        weight.state = 'default';
+                    });
                 }
                 else {
                     // устанавливаем состояние всех грузов на чашах
                     this.scalepan_left_ar.forEach(function (weight) {
-                        weight.state = 'lost'
-                    })
+                        weight.state = 'lost';
+                    });
                     this.scalepan_right_ar.forEach(function (weight) {
-                        weight.state = 'happy'
-                    })
+                        weight.state = 'happy';
+                    });
                     if (this.scalepan_left_ar.length == 0) {
-                        coff = weight_coff * max_weight
+                        coff = weight_coff * max_weight;
                     }
                 }
                 /* Если фактический вес превышает max_weight то устанавливаем его как максимум,
                    чтобы весы в небо не улетали */
                 if (Math.abs(coff) > weight_coff * max_weight) {
-                    coff = weight_coff * max_weight
+                    coff = weight_coff * max_weight;
                     if (value < 0) {
-                        coff = -coff
+                        coff = -coff;
                     }
                 }
-                this.pos = value < 0 ? 'left' : 'right'
+                this.pos = value < 0 ? 'left' : 'right';
                 //Анимируем весы и устанавливаем reload пушки
                 this.$scalepan_left.stop().animate({'top': -coff}, 500, function () {
-                    factory.weight_factory.reload = false
-                })
-                this.$scalepan_right.stop().animate({'top': coff}, 500)
-                self.$el.attr('data-size', value)
+                    factory.weight_factory.reload = false;
+                });
+                this.$scalepan_right.stop().animate({'top': coff}, 500);
+                self.$el.attr('data-size', value);
             }
         }
     })
@@ -420,11 +420,11 @@ var factory = (function ($) {
     return {
         init: init,
         weight: function (size) {
-            return new weight(size)
+            return new weight(size);
         },
     }
 /* jQuery объект глобальный, а нам понадобилось добавить свою анимацию. Чтобы не было конфликтов используем noConflict.
    По этой же причине $().ready находиться в factory.init */
-})(jQuery.noConflict(true))
+})(jQuery.noConflict(true));
 
-factory.init()
+factory.init();
